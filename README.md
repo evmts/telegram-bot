@@ -6,6 +6,7 @@ A Telegram channel monitoring application built with:
 - Effect-TS - Functional effect system for TypeScript
 - Astro - Fast frontend framework
 - SQLite - Embedded database
+- SST - Infrastructure as code for Cloudflare deployment
 
 ## Project Structure
 
@@ -16,6 +17,7 @@ A Telegram channel monitoring application built with:
 - `api/` - Hono backend API endpoints
 - `data/` - SQLite database storage
 - `public/` - Static assets
+- `stacks/` - SST infrastructure stacks for Cloudflare deployment
 
 ## Features
 
@@ -75,6 +77,8 @@ The first time you run the application, you'll need to authenticate with Telegra
 
 ## Development
 
+### Local Development (without SST)
+
 1. Start the frontend development server:
    ```bash
    pnpm run dev
@@ -88,6 +92,31 @@ The first time you run the application, you'll need to authenticate with Telegra
 3. Run the cron job manually:
    ```bash
    pnpm run cron
+   ```
+
+### SST Development and Deployment
+
+For Cloudflare deployment using SST:
+
+1. Set up Cloudflare credentials:
+   ```bash
+   export CLOUDFLARE_API_TOKEN=your_token_here
+   export CLOUDFLARE_ACCOUNT_ID=your_account_id_here
+   ```
+
+2. For development with local changes and remote resources:
+   ```bash
+   pnpm sst:dev
+   ```
+
+3. For production deployment:
+   ```bash
+   pnpm sst:deploy --stage prod
+   ```
+
+4. To remove all deployed resources:
+   ```bash
+   pnpm sst:remove --stage prod
    ```
 
 ## API Endpoints
@@ -137,7 +166,15 @@ This application uses a functional architecture with Effect-TS:
   - `/telegram/scrape` - Trigger a manual scrape
   - `/telegram/report` - Generate a custom report
 
+- **Infrastructure** - Managed via SST
+  - `Database` - Cloudflare D1 SQLite-compatible database
+  - `API` - Hono API deployed as a Cloudflare Worker
+  - `Cron` - Scheduled Cloudflare Worker for periodic tasks
+
 ## References
 
 - [GramJS Documentation](https://gram.js.org/)
 - [Effect-TS Documentation](https://effect-ts.github.io/effect/docs/ai/ai)
+- [SST Documentation](https://sst.dev/docs/start/cloudflare/worker/)
+- [Cloudflare Workers](https://developers.cloudflare.com/workers/)
+- [Cloudflare D1 Database](https://developers.cloudflare.com/d1/)
